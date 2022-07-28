@@ -13,13 +13,13 @@
 
         <!--CSS-->
         <link rel="stylesheet" type="text/css" href="./style.css">
-
+        
         <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
         <title>RPG Character Maker</title>
     </head>
     <body>
 
-        <div class='game-maker'>
+        <div class='game-maker' id="app">
 
             <div class='container pt-5'>
                 <h5 class='text-white font-weight-bold'>表示エリア</h3>
@@ -28,7 +28,7 @@
                     <div class="row g-0 px-2">
                         <div class="col-md-3 d-flex justify-content-center align-items-center">
                             <div class='col-12 border border-white border-5 rounded-3 img-fit'>
-                                <img src="./images/male-hero.png" class="img-fluid rounded-start" alt="...">
+                                <img v-bind:src="img_format(profile.job, profile.gender)" class="img-fluid rounded-start" alt="..." id="characterDesign">
                                 
                             </div>
                             
@@ -36,18 +36,18 @@
                         <div class="col-md-9 text-white">
                             <div class="card-body px-2">
                                 <div class="border border-white border-4 rounded-3 px-3 py-1">
-                                    <h5 class="card-title">Name : Kiefer</h5>
-                                    <h5 class="card-title">Class : Hero</h5>
-                                    <h5 class="card-title">Gender : Male</h5>
-                                    <h5 class="card-title m-0">Traits : Brave</h5>
+                                    <h5 class="card-title">Name : {{ profile.name }}</h5>
+                                    <h5 class="card-title">Class : {{ profile.job }}</h5>
+                                    <h5 class="card-title">Gender : {{ profile.gender }}</h5>
+                                    <h5 class="card-title m-0">Traits : {{ profile.trait }}</h5>
                                 </div>
                                 
                                 <div class='mt-2 border border-white border-4 rounded-3 px-3 py-1'>
-                                    <h5 class="card-title">Strength : 10</h5>
-                                    <h5 class="card-title">Agility : 10</h5>
-                                    <h5 class="card-title">Resilience : 10</h5>
-                                    <h5 class="card-title">Wisdom : 10</h5>
-                                    <h5 class="card-title m-0">Luck : 10</h5>
+                                    <h5 class="card-title">Strength : {{ status.strength}}</h5>
+                                    <h5 class="card-title">Agility : {{ status.agility }}</h5>
+                                    <h5 class="card-title">Resilience : {{ status.resilience }}</h5>
+                                    <h5 class="card-title">Wisdom : {{ status.wisdom }}</h5>
+                                    <h5 class="card-title m-0">Luck : {{ status.luck }}</h5>
                                 </div>
                             </div>
                         </div>
@@ -62,7 +62,7 @@
                 <div class="mb-3 row">
                     <label for="inputName" class="col-sm-1 col-form-label text-white">Name</label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control" id="inputName">
+                        <input type="text" class="form-control" id="inputName" v-on:input="inputCharacterName" v-bind:value="profile.name">
                     </div>
                 </div>
 
@@ -70,11 +70,11 @@
                     <label for="inputName" class="col-sm-1 col-form-label text-white">Gender</label>
                     <div class="col-sm-3 mt-2">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" v-model="profile.gender" value="Male">
                             <label class="form-check-label text-white" for="inlineRadio1">Male</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" v-model="profile.gender" value="Female">
                             <label class="form-check-label text-white" for="inlineRadio2">Female</label>
                         </div>
                     </div>
@@ -83,28 +83,30 @@
                 <div class="mb-3 row">
                     <label for="inputName" class="col-sm-1 col-form-label text-white">Class</label>
                     <div class="col-sm-3">
-                        <select class="form-select" aria-label="Default select example">
-                            <option value="1">Hero</option>
-                            <option value="2">Warrior</option>
-                            <option value="3">Mage</option>
+                        <select class="form-select" aria-label="Default select example" id="selectClass" v-model="profile.job">
+                            <option value="default" disabled>クラスを選択してください</option>
+                            <option v-for="job in profile.jobs"  v-bind:key="job.code">{{ job.label }}</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="mb-3 row">
-                    <label for="inputName" class="col-sm-1 col-form-label text-white">Traits</label>
+                    <label for="inputName" class="col-sm-1 col-form-label text-white" id="selectTraits">Traits</label>
                     <div class="col-sm-3">
-                        <select class="form-select" aria-label="Default select example">
-                            <option value="1">Everyman</option>
-                            <option value="2">Bat out of hell</option>
-                            <option value="3">Brave</option>
-                            <option value="3">Lucky devil</option>
-                            <option value="3">Tomboy</option>
+                        <select class="form-select" aria-label="Default select example" v-model="profile.trait">
+                            <option value="degault" disabled>性格を選択してください</option>
+                            <option>EveryMan</option>
+                            <option>Bat out of hell</option>
+                            <option v-if="profile.job == 'Hero'">Brave</option>
+                            <option v-if="profile.gender == 'Male'">Lucky devil</option>
+                            <option v-if="profile.gender == 'Female'">Tomboy</option>
                         </select>
                     </div>
                 </div>
             </div>
         </div>
+        
+    <script src="./main1.js"></script>
     </body>
 </html>
 
