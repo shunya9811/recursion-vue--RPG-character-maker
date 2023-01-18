@@ -54,15 +54,15 @@ var app = new Vue({
             this.status.wisdom = config.initialAbility.wisdom;
             this.status.luck = config.initialAbility.luck;
 
-            if (newTrait == "Bat out of hell"){
+            if (newTrait === "Bat out of hell"){
                 this.status.agility *= 1.4;
-            } else if (newTrait == "Brave"){
+            } else if (newTrait === "Brave"){
                 this.status.strength *= 1.1;
-                this.status.resilience += 1.1;
+                this.status.resilience *= 1.1;
                 this.status.luck *= 1.2;
-            } else if (newTrait == "Lucky devil"){
+            } else if (newTrait === "Lucky devil"){
                 this.status.luck *= 1.5;
-            } else if (newTrait == "Tomboy"){
+            } else if (newTrait === "Tomboy"){
                 this.status.strength *= 1.1;
                 this.status.resilience *= 1.2;
             }
